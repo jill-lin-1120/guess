@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    
+    #btn_reset{
+        opacity: 0;
+        pointer-events: none;
+        float: left;
+    }
+    #btn_reset.show{
+        opacity: 1;
+        pointer-events: all;
+    }
+    .disappear{
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    </style>
+</head>
+<body>
+    <h1>猜數字遊戲(0~100)</h1>
+    <p id="result">遊戲規則:</p>
+    <input id="input_number" name="input_number" type="number" placeholder="猜看看數字吧">
+    <button id="btn" type="button" >猜</button>
+    <button id="btn_reset" type="reset" >重新來過</button>
+<script>
+    var answer=Math.floor(Math.random()*101)//答案
+    var guess//未轉換資料型態前的(字串)
+    var guess_num//使用者猜的數字
+    var result=document.querySelector('#result')//顯示的結果文字
+    var range_min=0//給提示的範圍最小值
+    var range_max=100//給提示的範圍最大值
+    var guess_round=1//猜的回合數
+    var btn_reset=document.querySelector('#btn_reset')//重置按鈕
+    var input_btn=document.getElementById("input_number")//input輸入欄位
+    
+    console.log(answer)
+
+    btn.onclick=function(){
+        guess=document.getElementById("input_number").value
+        guess_num=parseInt(guess)
+        console.log(typeof guess_num)
+        console.log('使用者輸入的數字為:',guess_num)
+        // 判斷使用者輸入的數字是否介於0-100
+        if (guess_num>100){
+            result.style.color= "red"
+            result.textContent='輸入錯誤，請輸入小於100的數字!'
+        }
+            else if(guess_num<0){
+                result.style.color= "red"
+                result.textContent='輸入錯誤，請輸入大於0的數字!'
+            }
+            else if(guess==""){
+                result.style.color= "red"
+                result.textContent='請輸入數字!'
+            }
+            // 當使用者數字有介於0-100時
+            else{
+                console.log('當使用者數字有介於0-100時')
+                // 當答對時
+                if(guess_num===answer){
+                    console.log('答對')
+                    result.style.color= "black"
+                    result.textContent=`你猜的是:${guess_num}，答對了!!你好棒喔!!，花了${guess_round}次就答對了!`
+                    document.getElementById('input_number').value = ''//清空input內容
+                    console.log(guess_num)
+                    btn_reset.classList.add('show')//重置按鈕出現
+                    btn.classList.add('disappear')//猜的按鈕不見
+                    input_btn.classList.add('disappear')//input不見
+                }
+                // 當猜得比答案大時
+                else if(guess_num>answer){
+                    console.log('答錯 太大了')
+                    range_max=guess_num
+                    console.log('範圍最大值是',range_max)
+                    console.log('範圍最小值是',range_min)
+                    console.log('回和數',guess_round)
+                    guess_round++
+                    result.style.color= "black"
+                    result.innerHTML=`你猜的是:${guess_num}<br>答錯了~猜太大了啦! 
+                    <br>給你一點提示:範圍是${range_min}~${range_max}之間喔，
+                    <br>目前已經花了${guess_round}次答題了!`
+                    document.getElementById('input_number').value = ''
+                }
+                // 當猜得比答案小時
+                else{
+                    console.log('答錯 太小了')
+                    range_min=guess_num
+                    console.log('範圍最大值是',range_max)
+                    console.log('範圍最小值是',range_min)
+                    guess_round++
+                    result.style.color= "black"
+                    result.innerHTML=`你猜的是:${guess_num}<br>答錯了~猜太小了喔! <br>給你一點提示:範圍是${range_min}~${range_max}之間，
+                    <br>目前已經花了${guess_round}次答題了!`
+                    document.getElementById('input_number').value = ''
+                }
+            }
+    }
+    btn_reset.onclick=function(){
+        //重新開始，重置
+        answer=Math.floor(Math.random()*101)//重置答案
+        console.log('新的答案是:',answer)
+        result.innerHTML='重新開始了喔!!' //顯示的結果文字
+        range_min=0//給提示的範圍最小值
+        range_max=100//給提示的範圍最大值
+        guess_round=1//猜的回合數
+        btn_reset.classList.remove('show')//重置按鈕不見
+        btn.classList.remove('disappear')//猜的按鈕出現
+        input_btn.classList.remove('disappear')//input出現
+    }
+
+</script>
+</body>
+</html>
